@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>拼图</title>
+	<style type="text/css">
+	</style>
+	<script type="text/javascript" src="jquery.min.js"></script>
+		
+	<script type="text/javascript">
+	
+	    var list=[1,2,3,4,5,6,7,8];//图片位置
+	    var record=[];//索引
+		var setinterval;
+		var wide=80;
+		var imageName='image.jpg';
+		
+		var temp=9;
+		
+		$(function(){
+			$('td').css('width',wide+'px');
+			$('td').css('height',wide+'px');
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			list.sort(function(){ return 0.5 - Math.random(); }); 
+			for(var i=0;i<list.length;i++){
+				record.push(list[i]);
+			}
+			for(var i=0;i<list.length;i++){
+				if(list[i]==1)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll 0px 0px');
+				else if(list[i]==2)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll -'+wide+'px 0px');
+				else if(list[i]==3)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll -'+(wide*2)+'px 0px');
+				else if(list[i]==4)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll 0px -'+wide+'px');
+				else if(list[i]==5)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll -'+wide+'px -'+wide+'px');
+				else if(list[i]==6)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll -'+(wide*2)+'px -'+wide+'px');
+				else if(list[i]==7)
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll 0px -'+(wide*2)+'px');
+				else
+					$('#block0'+(i+1)).css('background','url('+imageName+') no-repeat scroll -'+wide+'px -'+(wide*2)+'px');
+			}
+			record.push(9);
+		//	alert(list);
+		//	alert(record);
+			setinterval = setInterval(timecount,1000);
+			init();
+		});
+		
+		function timecount(){
+			var score = $('#time').text();
+			score++;
+			$('#time').text(score);
+		}
+		
+		function init(){
+		   document.onkeydown = function(ev){
+                var ev = ev || window.event;
+                switch(ev.keyCode){
+                    case 37://左
+						if(temp!=1&&temp!=4&&temp!=7){ 
+							var last = temp;//图片位置，非数组里面的数字
+							temp--;
+							var now=record[temp-1];
+							for(var i = 0;i<record.length;i++){
+								if(record[i]==now)
+									record[i] = 9;
+								else if(record[i]==9)
+									record[i] = now;
+							}
+							console.log(record);
+							$('#block0'+last).css('background',$('#block0'+temp).css('background'));
+							$('#block0'+temp).css('background','white');
+							if(record.join()=='1,2,3,4,5,6,7,8,9'){
+								end();
+							}
+						}
+                    break;
+                    case 38://上
+						if(temp!=1&&temp!=2&&temp!=3){
+							var last = temp;
+							temp -=3;
+							var now=record[temp-1];
+							for(var i = 0;i<record.length;i++){
+								if(record[i]==now)
+									record[i] = 9;
+								else if(record[i]==9)
+									record[i] = now;
+							}
+							console.log(record);
+							$('#block0'+last).css('background',$('#block0'+temp).css('background'));
+							$('#block0'+temp).css('background','white');
+							if(record.join()=='1,2,3,4,5,6,7,8,9'){
+								end();
+							}
+						}
+                    break;
+                    case 39://右 
+						if(temp!=3&&temp!=6&&temp!=9){ 
+							var last = temp;
+							temp++;
+							var now=record[temp-1];
+							for(var i = 0;i<record.length;i++){
+								if(record[i]==now)
+									record[i] = 9;
+								else if(record[i]==9)
+									record[i] = now;
+							}
+							console.log(record);
+							$('#block0'+last).css('background',$('#block0'+temp).css('background'));
+							$('#block0'+temp).css('background','white');
+							if(record.join()=='1,2,3,4,5,6,7,8,9'){
+								end();
+							}
+						}
+                    break;
+                    case 40://下
+						if(temp!=7&&temp!=8&&temp!=9){
+							var last = temp;
+							temp +=3;
+							var now=record[temp-1];
+							for(var i = 0;i<record.length;i++){
+								if(record[i]==now)
+									record[i] = 9;
+								else if(record[i]==9)
+									record[i] = now;
+							}
+							console.log(record);
+							$('#block0'+last).css('background',$('#block0'+temp).css('background'));
+							$('#block0'+temp).css('background','white');
+							if(record.join()=='1,2,3,4,5,6,7,8,9'){
+								end();
+							}
+						}
+                    break;
+                }
+            }
+		}
+		
+		function end(){
+			clearInterval(setinterval); 
+			document.onkeydown=function(){
+				return false;
+			}
+			var score = $('#time').text();
+			//alert('你赢了，用时'+score+'秒。');
+		    $('#newnew').html('你赢了，用时'+score+'秒。');
+		}
+		
+	</script>
+	
+</head>
+<body>
+    <div style="text-align:center;"><h1>拼图游戏</h1><p>说明：用方向键控制图片移动，拼图完成即可通关</p></div>
+	<table id="main" border="1" cellspacing="0" cellpadding="0" align='center'>
+		<tr><td id="block01"></td><td id="block02"></td><td id="block03"></td></tr>
+		<tr><td id="block04"></td><td id="block05"></td><td id="block06"></td></tr>
+		<tr><td id="block07"></td><td id="block08"></td><td id="block09"></td></tr>
+	</table>
+	<div>&nbsp;</div>
+	<div style="text-align:center;" id="newnew">用时：<span id="time">0</span>秒</div>
+</body>
+</html>
